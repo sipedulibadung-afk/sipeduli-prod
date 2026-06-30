@@ -1,0 +1,126 @@
+================================================================
+PANDUAN INSTALASI BACKEND SIPEDULI BADUNG
+================================================================
+
+LANGKAH 1: BUAT GOOGLE SPREADSHEET
+---------------------------------
+1. Buka https://sheets.google.com
+2. Buat spreadsheet baru dengan nama: DB_SIPEDULI_BADUNG
+3. Salin ID spreadsheet dari URL:
+   https://docs.google.com/spreadsheets/d/1fgQcLfZ7Id30dZyjB96T3TpSSdP-6fsnpGGetDfzshc/edit
+   → Simpan ID tersebut
+
+LANGKAH 2: BUAT FOLDER DI GOOGLE DRIVE
+--------------------------------------
+1. Buka https://drive.google.com
+2. Buat folder baru: "Files_SIPEDULI_BADUNG"
+3. Klik kanan folder → Bagikan → Akses: "Siapa saja yang memiliki link"
+4. Salin ID folder dari URL:
+   https://drive.google.com/drive/folders/1J0ZBQwOAC9crsjZKXwxtPTr27fzqcC8r?usp=drive_link
+   → Simpan ID tersebut
+
+LANGKAH 3: SETUP GOOGLE APPS SCRIPT
+-----------------------------------
+1. Buka https://script.google.com
+2. Klik "Proyek Baru"
+3. Hapus kode default, salin isi file Code.gs
+4. GANTI 2 HAL INI di bagian CONFIG:
+   - SPREADSHEET_ID: 'ID_SPREADSHEET_ANDA'
+   - FOLDER_ID: 'ID_FOLDER_DRIVE_ANDA'
+5. Klik ikon ⚙ (Project Settings)
+6. Centang: "Tampilkan file appsscript.json di editor"
+7. Buka appsscript.json, salin isi dari file appsscript.json yang saya berikan
+8. Simpan (Ctrl+S)
+
+LANGKAH 4: JALANKAN SETUP DATABASE
+----------------------------------
+1. Di editor Apps Script, pilih fungsi "setupDatabase" di dropdown
+2. Klik tombol ▶ (Run)
+3. Akan muncul permintaan izin:
+   - Klik "Tinjau Izin"
+   - Pilih akun Google
+   - Klik "Lanjutan" → "Buka SIPEDULI BADUNG (tidak aman)"
+   - Klik "Izinkan"
+4. Tunggu hingga selesai (lihat Execution log)
+
+LANGKAH 5: DEPLOY SEBAGAI WEB APP
+---------------------------------
+1. Klik "Deploy" → "New deployment"
+2. Klik ikon ⚙ → Pilih "Web app"
+3. Isi konfigurasi:
+   - Description: SIPEDULI BADUNG API v1
+   - Execute as: Me
+   - Who has access: Anyone
+4. Klik "Deploy"
+5. COPY URL yang muncul, contoh:
+   https://script.google.com/macros/s/AKfycbx.../exec
+   → Simpan URL ini!
+
+LANGKAH 6: INTEGRASI KE FRONTEND
+--------------------------------
+1. Buka file: assets/js/api.js
+2. Ganti baris ini:
+   BASE_URL: 'https://script.google.com/macros/s/XXXXXXXXXXXXXXXXXXXXXXX/exec'
+   
+   Dengan URL dari LANGKAH 5:
+   BASE_URL: 'https://script.google.com/macros/s/AKfycbx.../exec'
+
+3. Simpan file
+
+LANGKAH 7: TEST KONEKSI
+-----------------------
+1. Buka browser console (F12)
+2. Ketik: api.ping().then(r => console.log(r))
+3. Jika muncul: {success: true, message: "SIPEDULI BADUNG API is running"}
+   → BERHASIL! ✅
+
+================================================================
+AKUN DEFAULT (bisa diubah di sheet Users)
+================================================================
+Username         | Password  | Role
+-----------------|-----------|------------------
+admin            | admin123  | Administrator
+pimpinan         | pin123    | Pimpinan
+operator_dinsos  | op123     | Operator Dinsos
+
+================================================================
+TROUBLESHOOTING
+================================================================
+❌ Error "Script function not found"
+   → Pastikan nama fungsi di Code.gs sama
+
+❌ Error "Authorization required"
+   → Jalankan fungsi testApi() sekali untuk memberi izin
+
+❌ Error "Access denied to Drive"
+   → Pastikan folder sharing permission sudah benar
+
+❌ CORS error di browser
+   → Pastikan "Who has access" = Anyone saat deploy
+
+❌ Data tidak muncul
+   → Cek nama sheet di spreadsheet sama dengan di CONFIG.SHEETS
+
+================================================================
+STRUKTUR URL API
+================================================================
+GET:
+  ?action=ping
+  ?action=login&username=admin&password=admin123&role=admin
+  ?action=getDisabilitas&kecamatan=Kuta&jenis_disabilitas=Fisik
+  ?action=getDisabilitasById&id=ID123
+  ?action=getStats
+  ?action=getPrioritas
+  ?action=getKecamatan
+  ?action=getAsesmen
+  ?action=getBantuan
+
+POST (body JSON):
+  {action: 'saveDisabilitas', nik: '...', nama_lengkap: '...', ...}
+  {action: 'updateDisabilitas', id: '...', ...}
+  {action: 'deleteDisabilitas', id: '...'}
+  {action: 'saveAsesmen', disabilitas_id: '...', mobilitas: 30, ...}
+  {action: 'saveBantuan', ...}
+  {action: 'uploadFile', fileName: 'foto.jpg', fileData: 'base64...', mimeType: 'image/jpeg'}
+
+================================================================

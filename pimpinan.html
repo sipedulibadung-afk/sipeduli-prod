@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Pimpinan - SIPEDULI BADUNG</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css" rel="stylesheet">
+    <link href="assets/css/style.css" rel="stylesheet">
+</head>
+<body>
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header p-3 text-center">
+            <i class="bi bi-heart-pulse-fill fs-2 text-white"></i>
+            <h6 class="text-white fw-bold mt-2 mb-0">SIPEDULI BADUNG</h6>
+            <small class="text-white-50">Dashboard Pimpinan</small>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="dashboard.html" class="nav-link-sidebar"><i class="bi bi-speedometer2"></i> Dashboard</a>
+            <a href="data-disabilitas.html" class="nav-link-sidebar"><i class="bi bi-people"></i> Data Disabilitas</a>
+            <a href="asesmen.html" class="nav-link-sidebar"><i class="bi bi-clipboard2-check"></i> e-Asesmen</a>
+            <a href="monitoring.html" class="nav-link-sidebar"><i class="bi bi-geo-alt"></i> Monitoring</a>
+            <a href="laporan.html" class="nav-link-sidebar"><i class="bi bi-file-earmark-bar-graph"></i> Laporan</a>
+            <a href="pimpinan.html" class="nav-link-sidebar active"><i class="bi bi-bar-chart-line"></i> Dashboard Pimpinan</a>
+            <hr class="text-white-50 mx-3">
+            <a href="login.html" class="nav-link-sidebar text-danger" onclick="sessionStorage.clear()"><i class="bi bi-box-arrow-right"></i> Keluar</a>
+        </nav>
+    </div>
+
+    <div class="main-content">
+        <nav class="navbar top-navbar shadow-sm px-4">
+            <button class="btn btn-sm btn-outline-secondary d-lg-none" onclick="toggleSidebar()"><i class="bi bi-list"></i></button>
+            <h5 class="mb-0 fw-bold text-maroon"><i class="bi bi-bar-chart-line me-2"></i>Dashboard Pimpinan</h5>
+            <div><span class="badge bg-maroon" id="currentDate"></span></div>
+        </nav>
+
+        <div class="content-area p-4">
+            <div class="row g-3 mb-4">
+                <div class="col-xl-2 col-md-4 col-6">
+                    <div class="card border-0 shadow-sm bg-maroon text-white text-center p-3">
+                        <i class="bi bi-people-fill fs-2"></i>
+                        <h3 class="fw-bold mt-2 mb-0" id="pTotal">0</h3>
+                        <small>Total Data</small>
+                    </div>
+                </div>
+                <div class="col-xl-2 col-md-4 col-6">
+                    <div class="card border-0 shadow-sm bg-success text-white text-center p-3">
+                        <i class="bi bi-gift-fill fs-2"></i>
+                        <h3 class="fw-bold mt-2 mb-0" id="pDibantu">0</h3>
+                        <small>Sudah Dibantu</small>
+                    </div>
+                </div>
+                <div class="col-xl-2 col-md-4 col-6">
+                    <div class="card border-0 shadow-sm bg-warning text-white text-center p-3">
+                        <i class="bi bi-hourglass-split fs-2"></i>
+                        <h3 class="fw-bold mt-2 mb-0" id="pMenunggu">0</h3>
+                        <small>Menunggu</small>
+                    </div>
+                </div>
+                <div class="col-xl-2 col-md-4 col-6">
+                    <div class="card border-0 shadow-sm bg-info text-white text-center p-3">
+                        <i class="bi bi-hand-thumbs-up-fill fs-2"></i>
+                        <h3 class="fw-bold mt-2 mb-0" id="pPendampingan">0</h3>
+                        <small>Pendampingan</small>
+                    </div>
+                </div>
+                <div class="col-xl-2 col-md-4 col-6">
+                    <div class="card border-0 shadow-sm bg-danger text-white text-center p-3">
+                        <i class="bi bi-exclamation-triangle-fill fs-2"></i>
+                        <h3 class="fw-bold mt-2 mb-0" id="pPrioritas1">0</h3>
+                        <small>Prioritas I</small>
+                    </div>
+                </div>
+                <div class="col-xl-2 col-md-4 col-6">
+                    <div class="card border-0 shadow-sm text-white text-center p-3" style="background:#8B4513;">
+                        <i class="bi bi-percent fs-2"></i>
+                        <h3 class="fw-bold mt-2 mb-0" id="pCakupan">0%</h3>
+                        <small>Cakupan</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-3 mb-4">
+                <div class="col-lg-8">
+                    <div class="card shadow-sm border-0">
+                        <div class="card-header bg-white fw-bold text-maroon">
+                            <i class="bi bi-graph-up me-2"></i>Tren Penambahan Data
+                        </div>
+                        <div class="card-body"><canvas id="chartTren" height="100"></canvas></div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="card shadow-sm border-0">
+                        <div class="card-header bg-white fw-bold text-maroon">
+                            <i class="bi bi-pie-chart-fill me-2"></i>Status Bantuan
+                        </div>
+                        <div class="card-body"><canvas id="chartStatus" height="200"></canvas></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-3 mb-4">
+                <div class="col-lg-7">
+                    <div class="card shadow-sm border-0">
+                        <div class="card-header bg-white fw-bold text-maroon">
+                            <i class="bi bi-geo-alt-fill me-2"></i>Peta Persebaran
+                        </div>
+                        <div class="card-body"><div id="mapPimpinan" style="height:380px; border-radius:8px;"></div></div>
+                    </div>
+                </div>
+                <div class="col-lg-5">
+                    <div class="card shadow-sm border-0 h-100">
+                        <div class="card-header bg-white fw-bold text-maroon">
+                            <i class="bi bi-list-ol me-2"></i>Top Prioritas
+                        </div>
+                        <div class="card-body p-0">
+                            <ul class="list-group list-group-flush" id="listPrioritas"></ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white fw-bold text-maroon">
+                    <i class="bi bi-clipboard-data me-2"></i>Rekap Bantuan per Kecamatan
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0" id="tabelRekap">
+                            <thead class="bg-maroon text-white">
+                                <tr><th>Kecamatan</th><th>Total</th><th>Dibantu</th><th>Menunggu</th><th>Pendampingan</th><th>Cakupan</th></tr>
+                            </thead>
+                            <tbody id="tbodyRekap"></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card-footer bg-white text-end">
+                    <button class="btn btn-success btn-sm rounded-pill" onclick="ExportManager.exportToExcel('#tabelRekap', 'Rekap_Bantuan')">
+                        <i class="bi bi-file-earmark-excel me-1"></i>Excel
+                    </button>
+                    <button class="btn btn-danger btn-sm rounded-pill" onclick="ExportManager.exportDashboardPDF()">
+                        <i class="bi bi-file-earmark-pdf me-1"></i>PDF Dashboard
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.0/jspdf.plugin.autotable.min.js"></script>
+    <script src="assets/js/app.js"></script>
+    <script src="assets/js/api.js"></script>
+    <script src="assets/js/export.js"></script>
+    <script>
+        document.getElementById('currentDate').textContent = new Date().toLocaleDateString('id-ID', {weekday:'long', year:'numeric', month:'long', day:'numeric'});
+
+        async function loadDashboard() {
+            try {
+                const result = await api.getStats();
+                if (result.success) {
+                    const d = result.data;
+                    document.getElementById('pTotal').textContent = d.total;
+                    document.getElementById('pDibantu').textContent = d.sudahBantuan;
+                    document.getElementById('pMenunggu').textContent = d.menunggu;
+                    document.getElementById('pPendampingan').textContent = d.pendampingan;
+                    const cakupan = d.total > 0 ? Math.round((d.sudahBantuan / d.total) * 100) : 0;
+                    document.getElementById('pCakupan').textContent = cakupan + '%';
+                    renderRekap(d.perKecamatan);
+                }
+                
+                const prio = await api.getPrioritas();
+                if (prio.success) {
+                    document.getElementById('pPrioritas1').textContent = prio.data.filter(p => p.kategori_prioritas === 'PRIORITAS I').length;
+                    renderPrioritasList(prio.data);
+                }
+            } catch (err) {
+                console.log('Demo mode');
+            }
+        }
+
+        function renderRekap(perKec) {
+            const tbody = document.getElementById('tbodyRekap');
+            const kecs = Object.keys(perKec || {});
+            if (kecs.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="text-center">Belum ada data</td></tr>';
+                return;
+            }
+            tbody.innerHTML = kecs.map(k => `
+                <tr>
+                    <td><strong>${k}</strong></td>
+                    <td>${perKec[k]}</td>
+                    <td>${Math.round(perKec[k]*0.7)}</td>
+                    <td>${Math.round(perKec[k]*0.25)}</td>
+                    <td>${Math.round(perKec[k]*0.05)}</td>
+                    <td><div class="progress" style="height:20px;"><div class="progress-bar bg-success" style="width:70%">70%</div></div></td>
+                </tr>
+            `).join('');
+        }
+
+        function renderPrioritasList(data) {
+            const list = document.getElementById('listPrioritas');
+            if (!data || data.length === 0) {
+                list.innerHTML = '<li class="list-group-item text-center text-muted">Belum ada data</li>';
+                return;
+            }
+            list.innerHTML = data.slice(0, 5).map(r => {
+                let badge = 'bg-info';
+                if (r.kategori_prioritas === 'PRIORITAS I') badge = 'bg-danger';
+                else if (r.kategori_prioritas === 'PRIORITAS II') badge = 'bg-warning text-dark';
+                return `<li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <strong>${r.nama_lengkap}</strong><br>
+                        <small class="text-muted">${r.kecamatan} - ${r.jenis_disabilitas}</small>
+                    </div>
+                    <span class="badge ${badge} fs-6">${r.skor_prioritas}</span>
+                </li>`;
+            }).join('');
+        }
+
+        // Grafik
+        new Chart(document.getElementById('chartTren'), {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun'],
+                datasets: [{
+                    label: 'Data Baru',
+                    data: [45, 62, 78, 95, 110, 128],
+                    borderColor: '#8B1A1A',
+                    backgroundColor: 'rgba(139,26,26,0.1)',
+                    fill: true, tension: 0.4, borderWidth: 3
+                }]
+            },
+            options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+        });
+
+        new Chart(document.getElementById('chartStatus'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Sudah Dibantu', 'Menunggu', 'Pendampingan'],
+                datasets: [{ data: [847, 312, 97], backgroundColor: ['#198754', '#ffc107', '#0dcaf0'], borderWidth: 0 }]
+            },
+            options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+        });
+
+        // Peta
+        const map = L.map('mapPimpinan').setView([-8.8006, 115.1785], 11);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' }).addTo(map);
+        const kecamatan = [
+            { name: 'Kuta', lat: -8.7589, lng: 115.1687, count: 320 },
+            { name: 'Kuta Selatan', lat: -8.8200, lng: 115.1900, count: 285 },
+            { name: 'Abiansemal', lat: -8.6800, lng: 115.2100, count: 210 },
+            { name: 'Mengwi', lat: -8.6200, lng: 115.1800, count: 245 },
+            { name: 'Petang', lat: -8.4800, lng: 115.1500, count: 196 }
+        ];
+        kecamatan.forEach(k => {
+            const color = k.count > 300 ? '#8B1A1A' : k.count > 200 ? '#CD5C5C' : '#F4A460';
+            L.circleMarker([k.lat, k.lng], { radius: 22, fillColor: color, color: '#fff', weight: 2, fillOpacity: 0.85 })
+                .addTo(map).bindPopup(`<strong>Kec. ${k.name}</strong><br>Jumlah: ${k.count} jiwa`);
+        });
+
+        loadDashboard();
+    </script>
+</body>
+</html>

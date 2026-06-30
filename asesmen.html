@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>e-Asesmen - SIPEDULI BADUNG</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="assets/css/style.css" rel="stylesheet">
+</head>
+<body>
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header p-3 text-center">
+            <i class="bi bi-heart-pulse-fill fs-2 text-white"></i>
+            <h6 class="text-white fw-bold mt-2 mb-0">SIPEDULI BADUNG</h6>
+            <small class="text-white-50">e-Asesmen</small>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="dashboard.html" class="nav-link-sidebar"><i class="bi bi-speedometer2"></i> Dashboard</a>
+            <a href="data-disabilitas.html" class="nav-link-sidebar"><i class="bi bi-people"></i> Data Disabilitas</a>
+            <a href="asesmen.html" class="nav-link-sidebar active"><i class="bi bi-clipboard2-check"></i> e-Asesmen</a>
+            <a href="monitoring.html" class="nav-link-sidebar"><i class="bi bi-geo-alt"></i> Monitoring</a>
+            <a href="laporan.html" class="nav-link-sidebar"><i class="bi bi-file-earmark-bar-graph"></i> Laporan</a>
+            <a href="pimpinan.html" class="nav-link-sidebar"><i class="bi bi-bar-chart-line"></i> Dashboard Pimpinan</a>
+            <hr class="text-white-50 mx-3">
+            <a href="login.html" class="nav-link-sidebar text-danger" onclick="sessionStorage.clear()"><i class="bi bi-box-arrow-right"></i> Keluar</a>
+        </nav>
+    </div>
+
+    <div class="main-content">
+        <nav class="navbar top-navbar shadow-sm px-4">
+            <button class="btn btn-sm btn-outline-secondary d-lg-none" onclick="toggleSidebar()"><i class="bi bi-list"></i></button>
+            <h5 class="mb-0 fw-bold text-maroon">e-Asesmen Kebutuhan</h5>
+            <div></div>
+        </nav>
+
+        <div class="content-area p-4">
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-header bg-maroon text-white">
+                    <h5 class="mb-0"><i class="bi bi-clipboard2-check me-2"></i>Pilih Data untuk Diasesmen</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-8">
+                            <label class="form-label fw-semibold">Nama Penyandang Disabilitas</label>
+                            <select class="form-select" id="selectDisabilitas">
+                                <option value="">-- Pilih dari database --</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4 d-flex align-items-end">
+                            <button class="btn btn-maroon w-100" onclick="loadDataAsesmen()">
+                                <i class="bi bi-search me-1"></i>Muat Data
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-maroon text-white">
+                    <h5 class="mb-0"><i class="bi bi-clipboard2-check me-2"></i>Form Asesmen</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-4 p-3 bg-light rounded">
+                        <h6 class="fw-bold text-maroon">Data Responden</h6>
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <label class="form-label small">Nama</label>
+                                <input type="text" class="form-control form-control-sm" id="respNama" readonly>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label small">NIK</label>
+                                <input type="text" class="form-control form-control-sm" id="respNik" readonly>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label small">Jenis Disabilitas</label>
+                                <input type="text" class="form-control form-control-sm" id="respJenis" readonly>
+                            </div>
+                        </div>
+                    </div>
+
+                    <form id="formAsesmen">
+                        <div class="mb-4">
+                            <h6 class="fw-bold text-maroon border-bottom pb-2"><span class="badge bg-maroon me-2">1</span> Mobilitas</h6>
+                            <div class="form-check mb-2"><input class="form-check-input" type="radio" name="mobilitas" value="30" id="mob1"><label class="form-check-label" for="mob1">Mandiri (30)</label></div>
+                            <div class="form-check mb-2"><input class="form-check-input" type="radio" name="mobilitas" value="20" id="mob2"><label class="form-check-label" for="mob2">Dibantu (20)</label></div>
+                            <div class="form-check"><input class="form-check-input" type="radio" name="mobilitas" value="10" id="mob3"><label class="form-check-label" for="mob3">Tidak mampu (10)</label></div>
+                        </div>
+
+                        <div class="mb-4">
+                            <h6 class="fw-bold text-maroon border-bottom pb-2"><span class="badge bg-maroon me-2">2</span> Komunikasi</h6>
+                            <div class="form-check mb-2"><input class="form-check-input" type="radio" name="komunikasi" value="20" id="kom1"><label class="form-check-label" for="kom1">Baik (20)</label></div>
+                            <div class="form-check mb-2"><input class="form-check-input" type="radio" name="komunikasi" value="15" id="kom2"><label class="form-check-label" for="kom2">Cukup (15)</label></div>
+                            <div class="form-check"><input class="form-check-input" type="radio" name="komunikasi" value="10" id="kom3"><label class="form-check-label" for="kom3">Sulit (10)</label></div>
+                        </div>
+
+                        <div class="mb-4">
+                            <h6 class="fw-bold text-maroon border-bottom pb-2"><span class="badge bg-maroon me-2">3</span> Aktivitas Sehari-hari</h6>
+                            <div class="form-check mb-2"><input class="form-check-input" type="radio" name="adl" value="20" id="adl1"><label class="form-check-label" for="adl1">Mandiri (20)</label></div>
+                            <div class="form-check mb-2"><input class="form-check-input" type="radio" name="adl" value="15" id="adl2"><label class="form-check-label" for="adl2">Dibantu (15)</label></div>
+                            <div class="form-check"><input class="form-check-input" type="radio" name="adl" value="10" id="adl3"><label class="form-check-label" for="adl3">Ketergantungan penuh (10)</label></div>
+                        </div>
+
+                        <div class="mb-4">
+                            <h6 class="fw-bold text-maroon border-bottom pb-2"><span class="badge bg-maroon me-2">4</span> Kondisi Ekonomi</h6>
+                            <div class="form-check mb-2"><input class="form-check-input" type="radio" name="ekonomi" value="10" id="eko1"><label class="form-check-label" for="eko1">Mampu (10)</label></div>
+                            <div class="form-check mb-2"><input class="form-check-input" type="radio" name="ekonomi" value="15" id="eko2"><label class="form-check-label" for="eko2">Rentan (15)</label></div>
+                            <div class="form-check"><input class="form-check-input" type="radio" name="ekonomi" value="20" id="eko3"><label class="form-check-label" for="eko3">Tidak mampu (20)</label></div>
+                        </div>
+
+                        <div class="mb-4">
+                            <h6 class="fw-bold text-maroon border-bottom pb-2"><span class="badge bg-maroon me-2">5</span> Riwayat Bantuan</h6>
+                            <div class="form-check mb-2"><input class="form-check-input" type="radio" name="bantuan" value="5" id="ban1"><label class="form-check-label" for="ban1">Sudah pernah (5)</label></div>
+                            <div class="form-check"><input class="form-check-input" type="radio" name="bantuan" value="15" id="ban2"><label class="form-check-label" for="ban2">Belum pernah (15)</label></div>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex">
+                            <button type="button" class="btn btn-maroon btn-lg px-5 rounded-pill" onclick="hitungSkor()">
+                                <i class="bi bi-calculator me-2"></i>HITUNG PRIORITAS
+                            </button>
+                            <button type="button" class="btn btn-success btn-lg rounded-pill" onclick="simpanAsesmen()" style="display:none" id="btnSimpan">
+                                <i class="bi bi-save me-2"></i>SIMPAN KE DATABASE
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div id="hasilAsesmen" class="mt-4" style="display:none;">
+                <div class="card shadow-sm border-0">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0"><i class="bi bi-check-circle me-2"></i>Hasil Asesmen</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4 text-center">
+                                <h6 class="text-muted">Nama</h6>
+                                <h4 class="fw-bold text-maroon" id="hasilNama">-</h4>
+                            </div>
+                            <div class="col-md-4 text-center">
+                                <h6 class="text-muted">Skor Total</h6>
+                                <div class="display-3 fw-bold text-maroon" id="hasilSkor">0</div>
+                            </div>
+                            <div class="col-md-4 text-center">
+                                <h6 class="text-muted">Kategori</h6>
+                                <div id="hasilKategori"></div>
+                            </div>
+                        </div>
+                        <hr>
+                        <h6 class="fw-bold text-maroon">Rekomendasi Layanan:</h6>
+                        <div id="hasilRekomendasi"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/app.js"></script>
+    <script src="assets/js/api.js"></script>
+    <script>
+        let lastSkor = 0, lastKategori = '', lastRekomendasi = [];
+        let selectedDisabilitasId = '';
+
+        async function loadDropdown() {
+            const result = await api.getDisabilitas();
+            if (result.success) {
+                const select = document.getElementById('selectDisabilitas');
+                select.innerHTML = '<option value="">-- Pilih dari database --</option>' +
+                    result.data.map(r => `<option value="${r.id}" data-nik="${r.nik}" data-jenis="${r.jenis_disabilitas}">${r.nama_lengkap} - ${r.nik}</option>`).join('');
+            }
+        }
+
+        function loadDataAsesmen() {
+            const select = document.getElementById('selectDisabilitas');
+            const opt = select.options[select.selectedIndex];
+            if (!opt.value) {
+                showNotification('Pilih data terlebih dahulu', 'warning');
+                return;
+            }
+            selectedDisabilitasId = opt.value;
+            document.getElementById('respNama').value = opt.text.split(' - ')[0];
+            document.getElementById('respNik').value = opt.dataset.nik;
+            document.getElementById('respJenis').value = opt.dataset.jenis;
+        }
+
+        function hitungSkor() {
+            if (!selectedDisabilitasId) {
+                showNotification('Pilih data responden dulu', 'warning');
+                return;
+            }
+            
+            let total = 0;
+            const form = document.getElementById('formAsesmen');
+            ['mobilitas', 'komunikasi', 'adl', 'ekonomi', 'bantuan'].forEach(name => {
+                const sel = form.querySelector(`input[name="${name}"]:checked`);
+                if (sel) total += parseInt(sel.value);
+            });
+
+            document.getElementById('hasilNama').textContent = document.getElementById('respNama').value;
+            document.getElementById('hasilSkor').textContent = total;
+            lastSkor = total;
+
+            let kategori = '', badgeClass = '', rekomendasi = [];
+            if (total >= 85) {
+                kategori = 'PRIORITAS I'; badgeClass = 'bg-danger';
+                rekomendasi = ['Bantuan Sosial', 'Alat Bantu', 'Rehabilitasi Sosial', 'Pelatihan Kemandirian', 'Pendampingan Intensif'];
+            } else if (total >= 65) {
+                kategori = 'PRIORITAS II'; badgeClass = 'bg-warning text-dark';
+                rekomendasi = ['Bantuan Alat Bantu', 'Rehabilitasi Sosial', 'Pelatihan Kemandirian'];
+            } else {
+                kategori = 'PRIORITAS III'; badgeClass = 'bg-info';
+                rekomendasi = ['Pemantauan Berkala', 'Bantuan Sosial Rutin'];
+            }
+            lastKategori = kategori;
+            lastRekomendasi = rekomendasi;
+
+            document.getElementById('hasilKategori').innerHTML = `<span class="badge ${badgeClass} fs-5 px-4 py-2">${kategori}</span>`;
+            document.getElementById('hasilRekomendasi').innerHTML = '<ul class="list-group">' +
+                rekomendasi.map(r => `<li class="list-group-item d-flex align-items-center"><i class="bi bi-check-circle-fill text-success me-2"></i>${r}</li>`).join('') +
+                '</ul>';
+            
+            document.getElementById('hasilAsesmen').style.display = 'block';
+            document.getElementById('btnSimpan').style.display = 'inline-block';
+            document.getElementById('hasilAsesmen').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        async function simpanAsesmen() {
+            const form = document.getElementById('formAsesmen');
+            const data = {
+                disabilitas_id: selectedDisabilitasId,
+                nik: document.getElementById('respNik').value,
+                nama: document.getElementById('respNama').value,
+                mobilitas: form.querySelector('input[name="mobilitas"]:checked')?.value || 0,
+                komunikasi: form.querySelector('input[name="komunikasi"]:checked')?.value || 0,
+                adl: form.querySelector('input[name="adl"]:checked')?.value || 0,
+                ekonomi: form.querySelector('input[name="ekonomi"]:checked')?.value || 0,
+                riwayat_bantuan: form.querySelector('input[name="bantuan"]:checked')?.value || 0,
+                petugas: sessionStorage.getItem('userName') || ''
+            };
+            
+            showLoading('Menyimpan asesmen...');
+            const result = await api.saveAsesmen(data);
+            hideLoading();
+            
+            if (result.success) {
+                showNotification('✅ Asesmen berhasil disimpan!', 'success');
+            } else {
+                showNotification('❌ ' + result.message, 'danger');
+            }
+        }
+
+        loadDropdown();
+    </script>
+</body>
+</html>

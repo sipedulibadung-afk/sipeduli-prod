@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - SIPEDULI BADUNG</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="assets/css/style.css" rel="stylesheet">
+</head>
+<body class="bg-login">
+    <div class="container-login">
+        <div class="login-card shadow-lg">
+            <div class="text-center mb-4">
+                <div class="login-icon">
+                    <i class="bi bi-heart-pulse-fill"></i>
+                </div>
+                <h3 class="fw-bold text-maroon">SIPEDULI BADUNG</h3>
+                <p class="text-muted small">Sistem Informasi Pendataan Disabilitas</p>
+            </div>
+            <form id="loginForm">
+                <div class="mb-3">
+                    <label class="form-label fw-semibold"><i class="bi bi-person me-1"></i>Username</label>
+                    <input type="text" class="form-control form-control-lg" id="username" placeholder="Masukkan username" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold"><i class="bi bi-lock me-1"></i>Password</label>
+                    <div class="input-group">
+                        <input type="password" class="form-control form-control-lg" id="password" placeholder="Masukkan password" required>
+                        <button class="btn btn-outline-secondary" type="button" onclick="togglePassword()">
+                            <i class="bi bi-eye" id="eyeIcon"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold"><i class="bi bi-shield-lock me-1"></i>Login Sebagai</label>
+                    <select class="form-select form-select-lg" id="role">
+                        <option value="admin">Administrator</option>
+                        <option value="operator_dinsos">Operator Dinas Sosial</option>
+                        <option value="operator_kec">Operator Kecamatan</option>
+                        <option value="operator_desa">Operator Desa/Kelurahan</option>
+                        <option value="pimpinan">Pimpinan</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-maroon btn-lg w-100 rounded-pill mt-3">
+                    <i class="bi bi-box-arrow-in-right me-2"></i>LOGIN
+                </button>
+            </form>
+            <div class="text-center mt-4">
+                <small class="text-muted">© 2026 Dinas Sosial Kabupaten Badung</small>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/js/api.js"></script>
+    <script>
+        function togglePassword() {
+            const pwd = document.getElementById('password');
+            const icon = document.getElementById('eyeIcon');
+            if (pwd.type === 'password') {
+                pwd.type = 'text';
+                icon.classList.replace('bi-eye', 'bi-eye-slash');
+            } else {
+                pwd.type = 'password';
+                icon.classList.replace('bi-eye-slash', 'bi-eye');
+            }
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const role = document.getElementById('role').value;
+            
+            showLoading('Memverifikasi akun...');
+            
+            try {
+                const result = await api.login(username, password, role);
+                hideLoading();
+                
+                if (result.success) {
+                    sessionStorage.setItem('userRole', result.data.role);
+                    sessionStorage.setItem('userName', result.data.nama_lengkap);
+                    sessionStorage.setItem('userId', result.data.id);
+                    sessionStorage.setItem('isLoggedIn', 'true');
+                    showNotification(`Selamat datang, ${result.data.nama_lengkap}!`, 'success');
+                    setTimeout(() => {
+                        window.location.href = result.data.role === 'pimpinan' ? 'pimpinan.html' : 'dashboard.html';
+                    }, 1000);
+                } else {
+                    showNotification(result.message, 'danger');
+                }
+            } catch (error) {
+                hideLoading();
+                sessionStorage.setItem('userRole', role);
+                sessionStorage.setItem('userName', username);
+                sessionStorage.setItem('isLoggedIn', 'true');
+                showNotification('Login offline (API tidak tersedia)', 'warning');
+                setTimeout(() => {
+                    window.location.href = role === 'pimpinan' ? 'pimpinan.html' : 'dashboard.html';
+                }, 1000);
+            }
+        });
+    </script>
+</body>
+</html>

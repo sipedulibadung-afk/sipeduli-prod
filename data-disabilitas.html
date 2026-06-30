@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Disabilitas - SIPEDULI BADUNG</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="assets/css/style.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header p-3 text-center">
+            <i class="bi bi-heart-pulse-fill fs-2 text-white"></i>
+            <h6 class="text-white fw-bold mt-2 mb-0">SIPEDULI BADUNG</h6>
+            <small class="text-white-50">Data Disabilitas</small>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="dashboard.html" class="nav-link-sidebar"><i class="bi bi-speedometer2"></i> Dashboard</a>
+            <a href="data-disabilitas.html" class="nav-link-sidebar active"><i class="bi bi-people"></i> Data Disabilitas</a>
+            <a href="asesmen.html" class="nav-link-sidebar"><i class="bi bi-clipboard2-check"></i> e-Asesmen</a>
+            <a href="monitoring.html" class="nav-link-sidebar"><i class="bi bi-geo-alt"></i> Monitoring</a>
+            <a href="laporan.html" class="nav-link-sidebar"><i class="bi bi-file-earmark-bar-graph"></i> Laporan</a>
+            <a href="pimpinan.html" class="nav-link-sidebar"><i class="bi bi-bar-chart-line"></i> Dashboard Pimpinan</a>
+            <hr class="text-white-50 mx-3">
+            <a href="login.html" class="nav-link-sidebar text-danger"><i class="bi bi-box-arrow-right"></i> Keluar</a>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <nav class="navbar top-navbar shadow-sm px-4">
+            <button class="btn btn-sm btn-outline-secondary d-lg-none" onclick="toggleSidebar()">
+                <i class="bi bi-list"></i>
+            </button>
+            <h5 class="mb-0 fw-bold text-maroon">Data Penyandang Disabilitas</h5>
+            <div>
+                <button class="btn btn-maroon btn-sm rounded-pill" data-bs-toggle="modal" data-bs-target="#modalTambah">
+                    <i class="bi bi-plus-circle me-1"></i>Tambah Data
+                </button>
+            </div>
+        </nav>
+
+        <div class="content-area p-4">
+            <!-- Filter -->
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-3">
+                            <label class="form-label small fw-semibold">Kecamatan</label>
+                            <select class="form-select form-select-sm" id="filterKecamatan">
+                                <option value="">Semua Kecamatan</option>
+                                <option>Kuta</option>
+                                <option>Kuta Selatan</option>
+                                <option>Abiansemal</option>
+                                <option>Mengwi</option>
+                                <option>Petang</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label small fw-semibold">Jenis Disabilitas</label>
+                            <select class="form-select form-select-sm" id="filterJenis">
+                                <option value="">Semua Jenis</option>
+                                <option>Fisik</option>
+                                <option>Mental</option>
+                                <option>Intelektual</option>
+                                <option>Sensorik</option>
+                                <option>Ganda</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label small fw-semibold">Pencarian</label>
+                            <input type="text" class="form-control form-control-sm" id="filterSearch" placeholder="Nama / NIK...">
+                        </div>
+                        <div class="col-md-3 d-flex align-items-end">
+                            <button class="btn btn-maroon btn-sm w-100" onclick="loadDataDisabilitas()">
+                                <i class="bi bi-search me-1"></i>Cari
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabel Data -->
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="bg-maroon text-white">
+                                <tr>
+                                    <th>No</th>
+                                    <th>NIK</th>
+                                    <th>Nama</th>
+                                    <th>JK</th>
+                                    <th>Kecamatan</th>
+                                    <th>Desa</th>
+                                    <th>Jenis Disabilitas</th>
+                                    <th>Tingkat</th>
+                                    <th>DTKS</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbodyData">
+                                <tr><td colspan="10" class="text-center py-4">Memuat data...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card-footer bg-white">
+                    <small class="text-muted" id="infoData">Menampilkan 0 data</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Tambah Data -->
+    <div class="modal fade" id="modalTambah" tabindex="-1">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header bg-maroon text-white">
+                    <h5 class="modal-title"><i class="bi bi-person-plus me-2"></i>Tambah Data Penyandang Disabilitas</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formTambah">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Nama Lengkap <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="nama_lengkap" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">NIK <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="nik" maxlength="16" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold">Tanggal Lahir</label>
+                                <input type="date" class="form-control" name="tanggal_lahir">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold">Jenis Kelamin</label>
+                                <select class="form-select" name="jenis_kelamin">
+                                    <option>Laki-laki</option>
+                                    <option>Perempuan</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold">No. HP Keluarga</label>
+                                <input type="tel" class="form-control" name="no_hp_keluarga">
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label fw-semibold">Alamat</label>
+                                <textarea class="form-control" name="alamat" rows="2"></textarea>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Desa/Kelurahan</label>
+                                <select class="form-select" name="desa">
+                                    <option value="">Pilih Desa</option>
+                                    <option>Mengwi</option>
+                                    <option>Sibang Kaja</option>
+                                    <option>Jimbaran</option>
+                                    <option>Kuta</option>
+                                    <option>Petang</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Kecamatan</label>
+                                <select class="form-select" name="kecamatan">
+                                    <option value="">Pilih Kecamatan</option>
+                                    <option>Kuta</option>
+                                    <option>Kuta Selatan</option>
+                                    <option>Abiansemal</option>
+                                    <option>Mengwi</option>
+                                    <option>Petang</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Jenis Disabilitas <span class="text-danger">*</span></label>
+                                <select class="form-select" name="jenis_disabilitas" required>
+                                    <option value="">Pilih Jenis</option>
+                                    <option>Fisik</option>
+                                    <option>Mental</option>
+                                    <option>Intelektual</option>
+                                    <option>Sensorik</option>
+                                    <option>Ganda</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Tingkat Keparahan</label>
+                                <select class="form-select" name="tingkat_keparahan">
+                                    <option>Ringan</option>
+                                    <option>Sedang</option>
+                                    <option>Berat</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold">Status DTKS</label>
+                                <select class="form-select" name="status_dtks">
+                                    <option>Tidak</option>
+                                    <option>Ya</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold">Pendidikan</label>
+                                <select class="form-select" name="pendidikan">
+                                    <option>Tidak Sekolah</option>
+                                    <option>SD</option>
+                                    <option>SMP</option>
+                                    <option>SMA</option>
+                                    <option>Perguruan Tinggi</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold">Pekerjaan</label>
+                                <input type="text" class="form-control" name="pekerjaan">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold">Upload Foto</label>
+                                <input type="file" class="form-control form-control-sm" id="fotoFile" accept="image/*">
+                                <img id="previewFoto" style="max-width:100px; margin-top:5px; display:none;">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold">Upload KK</label>
+                                <input type="file" class="form-control form-control-sm" id="kkFile" accept=".pdf,.jpg,.png">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold">Upload KTP</label>
+                                <input type="file" class="form-control form-control-sm" id="ktpFile" accept=".pdf,.jpg,.png">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-maroon" onclick="submitForm()">
+                        <i class="bi bi-save me-1"></i>SIMPAN
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ✅ SCRIPT BARU (DITAMBAHKAN) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/app.js"></script>
+    <script src="assets/js/api.js"></script>
+    <script src="assets/js/upload.js"></script>
+    <script>
+        // Inisialisasi uploader
+        const fotoUploader = new FileUploader('fotoFile', { preview: 'previewFoto' });
+        const kkUploader = new FileUploader('kkFile');
+        const ktpUploader = new FileUploader('ktpFile');
+
+        // Load data saat halaman dibuka
+        document.addEventListener('DOMContentLoaded', () => {
+            loadDataDisabilitas();
+        });
+
+        async function loadDataDisabilitas() {
+            const filters = {
+                kecamatan: document.getElementById('filterKecamatan').value,
+                jenis_disabilitas: document.getElementById('filterJenis').value,
+                search: document.getElementById('filterSearch').value
+            };
+            
+            showLoading('Memuat data...');
+            const result = await api.getDisabilitas(filters);
+            hideLoading();
+            
+            if (result.success) {
+                renderTabel(result.data);
+            } else {
+                showNotification(result.message, 'danger');
+            }
+        }
+
+        function renderTabel(data) {
+            const tbody = document.getElementById('tbodyData');
+            const info = document.getElementById('infoData');
+            
+            if (!data || data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="10" class="text-center text-muted py-4">Belum ada data</td></tr>';
+                info.textContent = 'Menampilkan 0 data';
+                return;
+            }
+            
+            tbody.innerHTML = data.map((row, idx) => `
+                <tr>
+                    <td>${idx + 1}</td>
+                    <td>${row.nik || '-'}</td>
+                    <td>${row.nama_lengkap || '-'}</td>
+                    <td>${(row.jenis_kelamin || 'L')[0]}</td>
+                    <td>${row.kecamatan || '-'}</td>
+                    <td>${row.desa || '-'}</td>
+                    <td><span class="badge bg-danger">${row.jenis_disabilitas || '-'}</span></td>
+                    <td>${row.tingkat_keparahan || '-'}</td>
+                    <td><span class="badge ${row.status_dtks === 'Ya' ? 'bg-success' : 'bg-secondary'}">${row.status_dtks || 'Tidak'}</span></td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-primary" onclick="lihatData('${row.id}')"><i class="bi bi-eye"></i></button>
+                        <button class="btn btn-sm btn-outline-danger" onclick="hapusData('${row.id}')"><i class="bi bi-trash"></i></button>
+                    </td>
+                </tr>
+            `).join('');
+            
+            info.textContent = `Menampilkan ${data.length} data`;
+        }
+
+        async function submitForm() {
+            const form = document.getElementById('formTambah');
+            const formData = new FormData(form);
+            
+            // Validasi
+            if (!formData.get('nama_lengkap') || !formData.get('nik')) {
+                showNotification('Nama dan NIK wajib diisi', 'danger');
+                return;
+            }
+            
+            const data = Object.fromEntries(formData.entries());
+            data.foto_url = fotoUploader.getUrl() || '';
+            data.kk_url = kkUploader.getUrl() || '';
+            data.ktp_url = ktpUploader.getUrl() || '';
+            data.created_by = sessionStorage.getItem('userName') || '';
+            
+            showLoading('Menyimpan data...');
+            const result = await api.saveDisabilitas(data);
+            hideLoading();
+            
+            if (result.success) {
+                showNotification('✅ Data berhasil disimpan!', 'success');
+                bootstrap.Modal.getInstance(document.getElementById('modalTambah')).hide();
+                form.reset();
+                document.getElementById('previewFoto').style.display = 'none';
+                loadDataDisabilitas();
+            } else {
+                showNotification('❌ ' + result.message, 'danger');
+            }
+        }
+
+        async function hapusData(id) {
+            if (!confirm('Yakin ingin menghapus data ini?')) return;
+            
+            showLoading('Menghapus data...');
+            const result = await api.deleteDisabilitas(id);
+            hideLoading();
+            
+            if (result.success) {
+                showNotification('Data berhasil dihapus', 'success');
+                loadDataDisabilitas();
+            } else {
+                showNotification(result.message, 'danger');
+            }
+        }
+
+        function lihatData(id) {
+            showNotification('Fitur detail data - akan dikembangkan', 'info');
+        }
+    </script>
+</body>
+</html>
