@@ -265,7 +265,7 @@
             { name: 'Kuta Utara', lat: -8.64500, lng: 115.16200, count: 90000 }
         ];
         kecamatan.forEach(k => {
-            const color = k.count > 300 ? '#8B1A1A' : k.count > 200 ? '#CD5C5C' : '#F4A460';
+            const color = k.count > 100000 ? '#8B1A1A' : k.count > 30000 ? '#CD5C5C' : '#F4A460';
             L.circleMarker([k.lat, k.lng], { radius: 20, fillColor: color, color: '#fff', weight: 2, fillOpacity: 0.8 })
                 .addTo(map).bindPopup(`<strong>Kec. ${k.name}</strong><br>Jumlah: ${k.count} jiwa`);
         });
