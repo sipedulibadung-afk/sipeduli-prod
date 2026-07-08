@@ -251,14 +251,15 @@
         const map = L.map('mapPimpinan').setView([-8.8006, 115.1785], 11);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' }).addTo(map);
         const kecamatan = [
-            { name: 'Kuta', lat: -8.7589, lng: 115.1687, count: 320 },
-            { name: 'Kuta Selatan', lat: -8.8200, lng: 115.1900, count: 285 },
-            { name: 'Abiansemal', lat: -8.6800, lng: 115.2100, count: 210 },
-            { name: 'Mengwi', lat: -8.6200, lng: 115.1800, count: 245 },
-            { name: 'Petang', lat: -8.4800, lng: 115.1500, count: 196 }
+            { name: 'Kuta', lat: -8.73900, lng: 115.17100, count: 58000 },
+            { name: 'Kuta Selatan', lat: -8.78300, lng: 115.17700, count: 122800 },
+            { name: 'Abiansemal', lat: -8.50900, lng: 115.20900, count: 100000 },
+            { name: 'Mengwi', lat: -8.55000, lng: 115.16700, count: 133900 },
+            { name: 'Petang', lat: -8.35800, lng: 115.22800, count: 33100 },
+            { name: 'Kuta Utara', lat: -8.64500, lng: 115.16200, count: 90000 }
         ];
         kecamatan.forEach(k => {
-            const color = k.count > 300 ? '#8B1A1A' : k.count > 200 ? '#CD5C5C' : '#F4A460';
+            const color = k.count > 80000 ? '#8B1A1A' : k.count > 30000 ? '#CD5C5C' : '#F4A460';
             L.circleMarker([k.lat, k.lng], { radius: 22, fillColor: color, color: '#fff', weight: 2, fillOpacity: 0.85 })
                 .addTo(map).bindPopup(`<strong>Kec. ${k.name}</strong><br>Jumlah: ${k.count} jiwa`);
         });
